@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>الملف الشخصي | دَرْب</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/profile.css">
+</head>
+<body data-page="profile">
+  <div data-site-nav></div>
+  <div class="demo-banner hidden" data-demo-banner></div>
+  <main class="page">
+    <div class="container profile-container">
+      <div class="page-head"><div><h1>الملف الشخصي</h1><p class="muted" data-profile-page-subtitle>معلومات الحساب العامة.</p></div></div>
+      <section class="profile-public card" data-public-profile aria-live="polite">
+        <div class="empty">جار تحميل الملف الشخصي...</div>
+      </section>
+      <section class="profile-edit card hidden" data-profile-editor aria-labelledby="editProfileTitle">
+        <div class="section-head"><div><h2 id="editProfileTitle">تعديل الملف الشخصي</h2><p class="muted">لا تظهر بيانات الاتصال أو الموقع الدقيق في ملفك العام.</p></div></div>
+        <form id="profileForm">
+          <div class="profile-photo">
+            <div class="profile-avatar" data-profile-avatar><span data-profile-initials></span><img class="hidden" data-profile-image alt="معاينة صورة الملف الشخصي"></div>
+            <div class="field"><label for="profilePhoto">صورة الملف الشخصي</label><input id="profilePhoto" name="profilePhoto" type="file" accept="image/jpeg,image/png,image/webp"><small>JPEG أو PNG أو WebP، بحد أقصى 1 ميغابايت.</small></div>
+          </div>
+          <div class="form-grid">
+            <div class="field"><label for="profileName">الاسم الظاهر</label><input id="profileName" name="fullName" required maxlength="80"></div>
+            <div class="field"><label for="profileUsername">اسم المستخدم</label><div class="username-input"><span>@</span><input id="profileUsername" name="username" required minlength="3" maxlength="20" pattern="[a-zA-Z0-9_]{3,20}" autocomplete="username" aria-describedby="usernameHint"></div><small id="usernameHint">3–20 حرفًا إنجليزيًا أو رقمًا أو _ فقط.</small></div>
+            <div class="field full"><label for="profileBio">نبذة قصيرة (اختياري)</label><textarea id="profileBio" name="bio" maxlength="280" rows="3"></textarea></div>
+            <div class="field full"><label for="profileUniversity">الجامعة</label><select id="profileUniversity" name="university" data-university-select></select></div>
+            <div class="field"><label for="profileGovernorate">المحافظة</label><select id="profileGovernorate" name="governorate" data-governorate data-for-target="profile"></select></div>
+            <div class="field"><label for="profileArea">اللواء / المنطقة العامة</label><select id="profileArea" name="area" data-area="profile"></select></div>
+            <div class="field"><label for="profileLocality">التجمع / المحلية</label><select id="profileLocality" name="locality" data-locality="profile"></select></div>
+            <div class="field hidden" data-driver-profile><label for="profileVehicle">نوع المركبة</label><select id="profileVehicle" name="vehicleType"><option>Sedan</option><option>SUV</option><option>Van</option><option>Minibus</option><option>Other</option></select></div>
+            <div class="field hidden" data-driver-profile><label for="profileCarModel">موديل المركبة</label><input id="profileCarModel" name="carModel"></div>
+            <div class="field hidden" data-driver-profile><label for="profileCarYear">سنة المركبة</label><input id="profileCarYear" name="carYear" type="number" min="1990" max="2035"></div>
+            <div class="field hidden" data-driver-profile><label for="profileSeats">مقاعد الركاب</label><input id="profileSeats" name="passengerSeats" type="number" min="1" max="20"></div>
+          </div>
+          <div id="profileMsg" class="notice hidden" role="status"></div>
+          <button class="btn btn-primary" type="submit">حفظ التغييرات</button>
+        </form>
+      </section>
+    </div>
+  </main>
+  <div class="modal-backdrop hidden" data-rating-modal>
+    <section class="modal rating-modal" role="dialog" aria-modal="true" aria-labelledby="ratingTitle">
+      <div class="modal-head"><div><h2 id="ratingTitle">قيّم تجربة الرحلة</h2><p class="muted" data-rating-driver></p></div><button class="icon-btn" type="button" data-close-rating aria-label="إغلاق">×</button></div>
+      <form data-rating-form>
+        <fieldset class="rating-fieldset"><legend>اختر تقييمًا من نجمة إلى خمس نجوم</legend><div class="rating-choice" role="radiogroup" aria-label="تقييم من نجمة إلى خمس نجوم">
+          <label><input type="radio" name="stars" value="1" required><span aria-hidden="true">★</span><span class="sr-only">نجمة واحدة</span></label>
+          <label><input type="radio" name="stars" value="2"><span aria-hidden="true">★</span><span class="sr-only">نجمتان</span></label>
+          <label><input type="radio" name="stars" value="3"><span aria-hidden="true">★</span><span class="sr-only">ثلاث نجوم</span></label>
+          <label><input type="radio" name="stars" value="4"><span aria-hidden="true">★</span><span class="sr-only">أربع نجوم</span></label>
+          <label><input type="radio" name="stars" value="5"><span aria-hidden="true">★</span><span class="sr-only">خمس نجوم</span></label>
+        </div></fieldset>
+        <div class="field"><label for="ratingComment">تعليق اختياري</label><textarea id="ratingComment" name="comment" maxlength="1000" rows="4" placeholder="شارك ملاحظاتك عن الرحلة"></textarea></div>
+        <div class="notice hidden" data-rating-message role="status"></div>
+        <div class="actions"><button class="btn btn-outline" type="button" data-close-rating>إلغاء</button><button class="btn btn-primary" type="submit">إرسال التقييم</button></div>
+      </form>
+    </section>
+  </div>
+  <script src="js/script.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

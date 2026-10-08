@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>لوحة السائق | دَرْب</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/driver.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="css/map.css">
+</head>
+<body data-page="driver">
+  <div data-site-nav></div>
+  <div class="demo-banner" data-demo-banner></div>
+  <main class="page">
+    <div class="container">
+      <div class="page-head">
+        <div><h1>أهلاً، <span id="driverName">—</span></h1><p class="muted">إدارة رحلاتك وطلبات الركاب.</p></div>
+        <button id="openTripModal" class="btn btn-primary">+ إنشاء رحلة</button>
+      </div>
+      <div class="dashboard-grid">
+        <div class="dash-stat"><strong id="tripCount">0</strong><span>رحلاتي</span></div>
+        <div class="dash-stat"><strong id="requestCount">0</strong><span>طلبات معلقة</span></div>
+        <div class="dash-stat"><strong>—</strong><span>الحالة</span></div>
+        <div class="dash-stat hidden" data-demo-only><strong>تجريبي</strong><span>وضع البيانات</span></div>
+      </div>
+      <section id="currentTrip"></section>
+      <section class="section" style="padding-top:25px">
+        <div class="two-col">
+          <div class="card"><h2>طلبات الركاب</h2><div id="requests" class="list"></div></div>
+          <div class="card"><h2>رحلاتي</h2><div id="myTrips" class="list"></div></div>
+        </div>
+      </section>
+      <section class="driver-map-section card">
+        <div class="section-head">
+          <div><h2>موقع رحلتي</h2><p class="muted">حدّث موقعك الحالي ليظهر للركاب المرتبطين برحلتك.</p></div>
+        </div>
+        <div id="driverLocation">
+          <p data-gps-status class="muted">لم يتم تحديث الموقع.</p>
+          <div class="grid-3">
+            <div><small>Latitude</small><strong data-gps-lat>—</strong></div>
+            <div><small>Longitude</small><strong data-gps-lng>—</strong></div>
+            <div><small>Accuracy</small><strong data-gps-acc>—</strong></div>
+          </div>
+          <p data-gps-time class="muted">—</p>
+          <button class="btn btn-primary" data-gps="#driverLocation" data-kind="driver">تحديث موقعي</button>
+          <p class="map-demo-note">يُحفظ آخر موقع محليًا على هذا الجهاز فقط؛ لا يوجد تتبع مباشر أو إرسال تلقائي للموقع.</p>
+          <p class="muted" data-driver-map-status>حدّث موقعك لعرضه على المخطط.</p>
+          <div class="map-canvas" data-driver-map aria-label="مخطط توضيحي لموقع السائق">
+            <div class="leaflet-map" data-online-map aria-label="خريطة إنترنت لموقع السائق"></div>
+            <div class="map-fallback">
+              <svg viewBox="0 0 800 420" role="img" aria-label="مخطط توضيحي للموقع المحفوظ">
+                <path class="map-road map-road-main" d="M-20 325 C130 245 205 355 340 265 S570 155 830 225"/>
+                <path class="map-road" d="M45 -15 C165 105 85 180 210 260 S355 340 330 445"/>
+                <path class="map-road" d="M330 -20 C285 75 420 115 395 210 S470 340 420 445"/>
+                <path class="map-road" d="M585 -20 C520 80 670 150 595 230 S695 345 650 445"/>
+                <path class="map-road" d="M-15 95 C145 155 250 50 410 105 S635 80 815 25"/>
+                <path class="map-road" d="M-20 390 C115 320 235 405 375 350 S625 300 820 365"/>
+                <g data-map-markers></g>
+              </svg>
+            </div>
+            <p class="map-caption">خرائط OpenStreetMap — تتطلب اتصالًا بالإنترنت. لا تُعرض الإحداثيات الرقمية.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <div id="tripModal" class="modal-backdrop hidden">
+    <div class="modal">
+      <div class="modal-head"><h2>بيانات الرحلة</h2><button id="closeTripModalX" class="icon-btn">×</button></div>
+      <form id="tripForm">
+        <input type="hidden" name="tripId">
+        <div class="form-grid">
+          <div class="field"><label>منطقة الانطلاق</label><input name="startLocality" required></div>
+          <div class="field"><label>اللواء / المنطقة</label><input name="startArea"></div>
+          <div class="field full"><label>الجامعة</label><input name="destinationUniversity" required></div>
+          <div class="field"><label>التاريخ</label><input name="departureDate" type="date" required></div>
+          <div class="field"><label>الوقت</label><input name="departureTime" type="time" required></div>
+          <div class="field"><label>السعر (د.أ)</label><input name="price" type="number" min="0" step="0.25" required></div>
+          <div class="field"><label>إجمالي المقاعد</label><input name="totalSeats" type="number" min="1" max="20" required></div>
+          <div class="field"><label>نوع المركبة</label><select name="vehicleType"><option>Sedan</option><option>SUV</option><option>Van</option><option>Minibus</option><option>Other</option></select></div>
+          <div class="field"><label>الموديل</label><input name="carModel" required></div>
+          <div class="field"><label>السنة</label><input name="carYear" type="number" min="1990" max="2035" required></div>
+        </div>
+        <div class="auth-actions"><button type="button" id="closeTripModal" class="btn btn-outline">إلغاء</button><button class="btn btn-primary">حفظ الرحلة</button></div>
+      </form>
+    </div>
+  </div>
+  <script src="js/script.js"></script>
+  <script src="js/gps.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/map.js"></script>
+  <script src="js/driver.js"></script>
+</body>
+</html>

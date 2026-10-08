@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>الرحلات | دَرْب</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body data-page="trips">
+  <div data-site-nav></div>
+  <div class="demo-banner hidden" data-demo-banner></div>
+  <main class="page">
+    <div class="container">
+      <div class="page-head">
+        <div>
+          <h1>استعرض الرحلات</h1>
+          <p class="muted">تصفح الرحلات المتاحة وتعرّف إلى تفاصيلها.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="filters">
+          <div class="field"><label>بحث</label><input id="tripSearch" placeholder="منطقة، جامعة، سائق..."></div>
+          <div class="field"><label>المحافظة</label><select id="filterGov"></select></div>
+          <div class="field"><label>الجامعة</label><select id="filterUniversity"></select></div>
+          <div class="field"><label>التاريخ</label><input id="filterDate" type="date"></div>
+          <div class="field"><label>المركبة</label><select id="filterVehicle"><option value="">كل الأنواع</option><option>Sedan</option><option>SUV</option><option>Van</option><option>Minibus</option><option>Other</option></select></div>
+          <div class="field"><label>التوفر</label><select id="filterAvail"><option value="">الكل</option><option value="yes">متاحة فقط</option></select></div>
+          <div class="field"><label>ترتيب</label><select id="sortTrips"><option value="earliest">الأقرب موعداً</option><option value="lowest">الأقل سعراً</option><option value="highest">الأعلى سعراً</option><option value="seats">الأكثر مقاعد</option></select></div>
+        </div>
+        <div class="tabs">
+          <button class="tab active" data-quick="all">الكل</button>
+          <button class="tab" data-quick="available">متاحة</button>
+          <button class="tab" data-quick="today">اليوم</button>
+        </div>
+      </div>
+      <div id="tripResults" class="grid-3" style="margin-top:18px"></div>
+    </div>
+  </main>
+  <script src="js/script.js"></script>
+  <script src="js/trips.js"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>لوحة الطالب | دَرْب</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="css/map.css">
+</head>
+<body data-page="dashboard">
+  <div data-site-nav></div>
+  <div class="demo-banner" data-demo-banner></div>
+  <main class="page">
+    <div class="container">
+      <div class="page-head">
+        <div>
+          <h1>أهلاً، <span id="welcomeName">—</span></h1>
+          <p class="muted">لوحة الطالب وإدارة الحجوزات.</p>
+        </div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="dash-stat"><strong id="statAvailable">0</strong><span>رحلات متاحة</span></div>
+        <div class="dash-stat"><strong id="statBookings">0</strong><span>حجوزاتي</span></div>
+        <div class="dash-stat"><strong id="statUpcoming">—</strong><span>الرحلة القادمة</span></div>
+        <div class="dash-stat"><strong id="statUniversity">—</strong><span>الجامعة</span></div>
+      </div>
+
+      <section class="mobility-section card" aria-labelledby="nearbyTitle">
+        <div class="section-head">
+          <div>
+            <h2 id="nearbyTitle">السيارات القريبة منك</h2>
+            <p class="muted">اعثر على رحلات متجهة إلى جامعتك. تظهر المسافة فقط عند توفر موقع دقيق من الطرفين.</p>
+          </div>
+          <button class="btn btn-primary" type="button" data-gps="#passengerLocation" data-kind="passenger">تحديد موقعي</button>
+        </div>
+        <div class="mobility-filters">
+          <div class="field"><label for="nearbyUniversity">الجامعة</label><select id="nearbyUniversity"><option value="">جميع الجامعات</option></select></div>
+          <div class="field"><label for="nearbyRadius">المسافة</label><select id="nearbyRadius"><option value="">كل المسافات</option><option value="2">أقل من 2 كم</option><option value="5">أقل من 5 كم</option><option value="10">أقل من 10 كم</option></select></div>
+          <div class="field"><label for="nearbySort">ترتيب السعر</label><select id="nearbySort"><option value="distance">الأقرب أولاً</option><option value="lowest">الأقل سعراً</option><option value="highest">الأعلى سعراً</option></select></div>
+          <div class="field"><label for="nearbyTime">وقت الانطلاق</label><select id="nearbyTime"><option value="all">جميع الأوقات</option><option value="soon">الأقرب وقتاً</option></select></div>
+          <div class="field"><label for="nearbyGovernorate">المحافظة يدويًا</label><select id="nearbyGovernorate"><option value="">اختر المحافظة</option></select></div>
+          <div class="field"><label for="nearbyArea">اللواء / المنطقة</label><select id="nearbyArea"><option value="">كل المناطق</option></select></div>
+          <div class="field"><label for="nearbyManual">التجمع / المحلية</label><select id="nearbyManual"><option value="">كل التجمعات</option></select></div>
+        </div>
+        <div class="map-layout">
+          <div class="map-canvas" data-passenger-map aria-label="خريطة توضيحية لمواقع الرحلات">
+            <div class="leaflet-map" data-online-map aria-label="خريطة إنترنت"></div>
+            <div class="map-fallback">
+              <svg viewBox="0 0 800 420" role="img" aria-label="مخطط توضيحي للمواقع المحفوظة">
+                <path class="map-road map-road-main" d="M-20 325 C130 245 205 355 340 265 S570 155 830 225"/>
+                <path class="map-road" d="M45 -15 C165 105 85 180 210 260 S355 340 330 445"/>
+                <path class="map-road" d="M330 -20 C285 75 420 115 395 210 S470 340 420 445"/>
+                <path class="map-road" d="M585 -20 C520 80 670 150 595 230 S695 345 650 445"/>
+                <path class="map-road" d="M-15 95 C145 155 250 50 410 105 S635 80 815 25"/>
+                <path class="map-road" d="M-20 390 C115 320 235 405 375 350 S625 300 820 365"/>
+                <g data-map-routes></g>
+                <g data-map-markers></g>
+              </svg>
+              <div class="map-empty-overlay" data-map-empty>حدّد موقعك أو اعرض الرحلات المتاحة</div>
+            </div>
+            <p class="map-caption">خرائط OpenStreetMap — تتطلب اتصالًا بالإنترنت. لا تُعرض الإحداثيات الرقمية.</p>
+          </div>
+          <aside class="nearby-panel">
+            <h3>الأقرب إليك</h3>
+            <p class="muted" data-map-status>حدّد موقعك لاحتساب المسافة. يمكن استعراض الرحلات حتى دون مشاركة الموقع.</p>
+            <div class="list nearby-list" data-nearby-list></div>
+            <a class="btn btn-outline" href="trips.html">استعراض جميع الرحلات</a>
+          </aside>
+        </div>
+      </section>
+
+      <section class="tracking-section card hidden" data-tracking-panel aria-labelledby="trackingTitle">
+        <div class="section-head">
+          <div>
+            <h2 id="trackingTitle">رحلتك القادمة</h2>
+            <p class="muted" data-tracking-subtitle></p>
+          </div>
+          <span class="badge confirmed" data-tracking-badge>حجز مؤكد</span>
+        </div>
+        <div class="map-layout">
+          <div class="map-canvas tracking-map" data-tracking-map aria-label="خريطة محاكاة مسار الرحلة">
+            <div class="leaflet-map" data-online-map aria-label="خريطة إنترنت لمسار الرحلة"></div>
+            <div class="map-fallback">
+              <svg viewBox="0 0 800 420" role="img" aria-label="محاكاة توضيحية لمسار الرحلة">
+                <path class="map-road map-road-main" d="M-20 325 C130 245 205 355 340 265 S570 155 830 225"/>
+                <path class="map-road" d="M45 -15 C165 105 85 180 210 260 S355 340 330 445"/>
+                <path class="map-road" d="M330 -20 C285 75 420 115 395 210 S470 340 420 445"/>
+                <path class="map-road" d="M585 -20 C520 80 670 150 595 230 S695 345 650 445"/>
+                <path class="map-road" d="M-15 95 C145 155 250 50 410 105 S635 80 815 25"/>
+                <path class="map-road" d="M-20 390 C115 320 235 405 375 350 S625 300 820 365"/>
+                <g data-tracking-route></g>
+                <g data-tracking-markers></g>
+              </svg>
+            </div>
+          </div>
+          <aside class="tracking-panel">
+            <div class="notice info">وضع تجريبي — موقع السيارة تتم محاكاته لأغراض العرض فقط.</div>
+            <div class="eta-card"><span data-eta-label>المسافة التقريبية</span><strong data-tracking-eta>بانتظار المواقع</strong><span class="muted" data-tracking-distance></span></div>
+            <ol class="tracking-timeline" data-tracking-timeline>
+              <li data-stage="confirmed">تم تأكيد الحجز</li>
+              <li data-stage="approaching">السائق في الطريق إليك</li>
+              <li data-stage="arrived">وصلت السيارة</li>
+              <li data-stage="picked_up">تم الصعود إلى السيارة</li>
+              <li data-stage="to_university">التوجه إلى الجامعة</li>
+              <li data-stage="completed">وصلت إلى الجامعة</li>
+            </ol>
+            <button class="btn btn-primary hidden" type="button" data-pickup-confirm>تم الصعود إلى السيارة</button>
+            <button class="btn btn-primary hidden" type="button" data-start-university>بدأت الرحلة إلى الجامعة</button>
+            <button class="btn btn-primary hidden" type="button" data-complete-trip>وصلت إلى الجامعة</button>
+            <p class="muted" data-tracking-status></p>
+          </aside>
+        </div>
+      </section>
+
+      <div class="two-col">
+        <section class="card"><h2>رحلاتي</h2><div id="myBookings" class="list"></div></section>
+        <aside class="card">
+          <h2>موقعي الحالي</h2>
+          <div id="passengerLocation">
+            <p data-gps-status class="muted">لم يتم تحديد موقع.</p>
+            <div class="grid-3">
+              <div><small>Latitude</small><strong data-gps-lat>—</strong></div>
+              <div><small>Longitude</small><strong data-gps-lng>—</strong></div>
+              <div><small>Accuracy</small><strong data-gps-acc>—</strong></div>
+            </div>
+            <p class="muted" data-gps-time>—</p>
+            <button class="btn btn-primary" data-gps="#passengerLocation" data-kind="passenger">تحديث موقعي</button>
+          </div>
+          <hr>
+          <h3>الملف</h3>
+          <p class="muted">يمكنك تعديل بياناتك من صفحة الملف الشخصي.</p>
+          <a class="btn btn-outline" href="profile.html">الملف الشخصي</a>
+        </aside>
+      </div>
+    </div>
+  </main>
+  <script src="js/script.js"></script>
+  <script src="js/gps.js"></script>
+  <script src="js/trips.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/map.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
